@@ -109,7 +109,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 80,
     paddingHorizontal: 20,
-    paddingBottom: 60,
+    paddingBottom: 10,
+    marginBottom: 20
   },
   iconContainer: {
     marginBottom: 30,
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.2)', // Subtle border
   },
   appTitle: {
-    fontSize: 38,
+    fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 12,
@@ -139,7 +140,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 8,
   },
   tagline: {
-    fontSize: 18,
+    fontSize: 15,
     color: 'rgba(255, 255, 255, 0.9)',
     textAlign: 'center',
     maxWidth: 280,
@@ -149,7 +150,7 @@ const styles = StyleSheet.create({
   },
   featuresSection: {
     paddingHorizontal: 20,
-    marginBottom: 60,
+    marginBottom: 90,
   },
   featureItem: {
     flexDirection: 'row',
@@ -157,7 +158,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.1)', // Glass-morphism effect
     padding: 15,
     borderRadius: 20,
-    marginBottom: 16,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000',
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   featureDescription: {
-    fontSize: 15,
+    fontSize: 13,
     color: 'rgba(255, 255, 255, 0.8)',
     lineHeight: 20,
   },
