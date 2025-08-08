@@ -379,8 +379,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tableText: {
-    fontSize: 48,
-    marginBottom: 20,
+    fontSize: 24,
+    marginBottom: 35,
+    color: "white"
   },
   instructionText: {
     color: '#666',

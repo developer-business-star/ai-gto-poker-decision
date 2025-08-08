@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   statTitle: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
     flex: 1,
   },

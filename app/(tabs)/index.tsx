@@ -446,17 +446,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   gameModeSubtitle: {
     fontSize: 14,
     color: 'rgba(255,255,255,0.8)',
-    marginBottom: 8,
+    marginBottom: 5,
   },
   gameModeDescription: {
     fontSize: 13,
     color: 'rgba(255,255,255,0.7)',
     lineHeight: 18,
+    marginBottom: 20
   },
   selectionIndicator: {
     position: 'absolute',
