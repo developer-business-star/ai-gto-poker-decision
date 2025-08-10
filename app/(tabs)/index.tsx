@@ -209,7 +209,7 @@ export default function HomeScreen() {
         <View style={styles.header}>
           <View style={styles.headerTop}>
             <View>
-              <ThemedText style={styles.title}>Welcom To Here 🤖</ThemedText>
+              <ThemedText style={styles.title}>Welcome To Here 🤖</ThemedText>
               <ThemedText style={styles.subtitle}>Ready to improve your game?</ThemedText>
             </View>
             <TouchableOpacity style={styles.solverButton} onPress={() => router.push('/(tabs)/camera')}>
