@@ -1,8 +1,9 @@
 import { ThemedView } from '@/components/ThemedView';
 import { useGame } from '@/contexts/GameContext';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import React, { useState } from 'react';
-import { Alert, Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const { width, height } = Dimensions.get('window');
 
@@ -18,6 +19,7 @@ export default function CameraScreen() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [autoCapture, setAutoCapture] = useState(false);
   const [lastAnalysis, setLastAnalysis] = useState<AnalysisResult | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const getFormatSpecificDecisions = () => {
     if (selectedFormat === 'cash') {
@@ -77,6 +79,60 @@ export default function CameraScreen() {
     }, 2000);
   };
 
+  const handleImageUpload = async () => {
+    try {
+      // Request media library permissions
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission Required',
+          'Please grant permission to access your photo library to upload poker table images.',
+          [{ text: 'OK' }]
+        );
+        return;
+      }
+
+      // Launch image picker
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [16, 9], // Good aspect ratio for poker tables
+        quality: 0.8,
+        exif: false,
+      });
+
+      if (!result.canceled && result.assets[0]) {
+        const imageUri = result.assets[0].uri;
+        setSelectedImage(imageUri);
+        
+        // Start analysis with the uploaded image
+        setIsAnalyzing(true);
+        setLastAnalysis(null);
+        
+        Alert.alert(
+          'Image Uploaded',
+          `Analyzing ${formatDisplayName} table image...`,
+          [{ text: 'OK' }]
+        );
+        
+        // Simulate analysis of the uploaded image
+        setTimeout(() => {
+          const analysis = generateFormatSpecificAnalysis();
+          setLastAnalysis(analysis);
+          setIsAnalyzing(false);
+        }, 3000); // Slightly longer for image analysis
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Alert.alert(
+        'Upload Error',
+        'Failed to select image. Please try again.',
+        [{ text: 'OK' }]
+      );
+    }
+  };
+
   const toggleAutoCapture = () => {
     setAutoCapture(!autoCapture);
     if (!autoCapture) {
@@ -127,16 +183,27 @@ export default function CameraScreen() {
           </View>
           
           <View style={styles.simulatedTable}>
-            <Text style={styles.tableText}>🎰 Poker Table View</Text>
-            <Text style={styles.instructionText}>
-              Position your phone to capture the {formatDisplayName.toLowerCase()} table
-            </Text>
-            <Text style={styles.formatHint}>
-              {selectedFormat === 'cash' 
-                ? 'Optimized for deep stack analysis' 
-                : 'Optimized for short stack decisions'
-              }
-            </Text>
+            {selectedImage ? (
+              <View style={styles.uploadedImageContainer}>
+                <Image source={{ uri: selectedImage }} style={styles.uploadedImage} />
+                <View style={styles.imageOverlay}>
+                  <Text style={styles.imageOverlayText}>Analyzing {formatDisplayName} Table</Text>
+                </View>
+              </View>
+            ) : (
+              <>
+                <Text style={styles.tableText}>🎰 Poker Table View</Text>
+                <Text style={styles.instructionText}>
+                  Position your phone to capture the {formatDisplayName.toLowerCase()} table
+                </Text>
+                <Text style={styles.formatHint}>
+                  {selectedFormat === 'cash' 
+                    ? 'Optimized for deep stack analysis' 
+                    : 'Optimized for short stack decisions'
+                  }
+                </Text>
+              </>
+            )}
           </View>
 
           {/* Analysis Overlay */}
@@ -144,7 +211,7 @@ export default function CameraScreen() {
             <View style={styles.analysisOverlay}>
               <View style={styles.loadingContainer}>
                 <Text style={styles.loadingText}>
-                  Analyzing {formatDisplayName}...
+                  {selectedImage ? 'Analyzing uploaded image...' : `Analyzing ${formatDisplayName}...`}
                 </Text>
                 <View style={styles.loadingBar}>
                   <View style={[styles.loadingProgress, { backgroundColor: getFormatColor() }]} />
@@ -207,7 +274,10 @@ export default function CameraScreen() {
         </View>
 
         <View style={styles.bottomControls}>
-          <TouchableOpacity style={styles.galleryButton}>
+          <TouchableOpacity 
+            style={styles.galleryButton}
+            onPress={handleImageUpload}
+          >
             <Ionicons name="images" size={24} color="#666" />
           </TouchableOpacity>
 
@@ -573,5 +643,32 @@ const styles = StyleSheet.create({
     width: 1,
     backgroundColor: 'rgba(255,255,255,0.2)',
     marginVertical: 4,
+  },
+  uploadedImageContainer: {
+    width: '100%',
+    height: 200,
+    borderRadius: 8,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  uploadedImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  imageOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+  imageOverlayText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 }); 
